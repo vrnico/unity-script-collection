@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using System.Collections.Generic; // Added for List<>
+using UnityEditor.SceneManagement; // For marking scene dirty
 
 public class LODCleanupTool : EditorWindow
 {
@@ -29,8 +29,12 @@ public class LODCleanupTool : EditorWindow
             if (parentObject.transform.childCount == 0)
                 continue;
 
-            // Unpack the prefab completely before making any changes
-            PrefabUtility.UnpackPrefabInstance(parentObject, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
+            // Check if the GameObject is part of a Prefab instance
+            if (PrefabUtility.IsPartOfPrefabInstance(parentObject))
+            {
+                // Unpack the prefab completely before making any changes
+                PrefabUtility.UnpackPrefabInstance(parentObject, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
+            }
 
             Transform highestLODTransform = null;
             int highestLODIndex = -1;
@@ -70,11 +74,24 @@ public class LODCleanupTool : EditorWindow
                     deleteCount++;
                 }
             }
+
+            // Remove the LODGroup component from the parent object
+            RemoveLODGroup(parentObject);
         }
 
         // Refresh the editor
         EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
 
         Debug.Log($"LOD cleanup complete. Deleted {deleteCount} objects.");
+    }
+
+    private static void RemoveLODGroup(GameObject gameObject)
+    {
+        LODGroup lodGroup = gameObject.GetComponent<LODGroup>();
+        if (lodGroup != null)
+        {
+            DestroyImmediate(lodGroup);
+            Debug.Log($"LODGroup component removed from {gameObject.name}.");
+        }
     }
 }
