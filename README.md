@@ -8,4 +8,4 @@ This collection contains various Unity Editor scripts. Explanations for specific
 - **Select Collider Type**: Choose the type of collider you want to delete (e.g., BoxCollider, SphereCollider) from the dropdown menu.
 - **Delete Colliders**: Click the "Delete Colliders in View" button to remove all colliders of the selected type within the current scene view.
 - **Example**:
-  ![Delete Specific Colliders Tool in Action](https://imgur.com/tyLQEHX.gif)
+  ![Delete Specific Colliders Tool in Action](https://i.imgur.com/tyLQEHX.gif)
